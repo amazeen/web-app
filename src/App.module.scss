@@ -1,0 +1,47 @@
+@import "./styles.scss";
+
+.sidebar {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 31; //bulma navbar's z-index is 30
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  background-color: $white;
+}
+
+.pad {
+    padding-left: 0;
+}
+
+@media (min-width: $tablet) {
+    .sidebar {
+        width: 35%;
+    }
+
+    .pad {
+        padding-left: 35%;
+    }
+}
+
+@media (min-width: $desktop) {
+    .sidebar {
+        width: 25%;
+    }
+
+    .pad {
+        padding-left: 25%;
+    }
+}
+
+@media (min-width: $fullhd) {
+    .sidebar {
+        width: 15%;
+    }
+
+    .pad {
+        padding-left: 15%;
+    }
+}
+

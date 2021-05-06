@@ -1,0 +1,27 @@
+@import "../styles.scss";
+
+.notification {
+    position: fixed!important;
+    bottom: 0;
+    right: 0;
+    margin: 1.5em;
+    z-index: 1;
+}
+
+@media (min-width: $tablet) {
+    .notification {
+        max-width: 75%
+    }
+}
+
+@media (min-width: $desktop) {
+    .notification {
+        max-width: 50%
+    }
+}
+
+@media (min-width: $fullhd) {
+    .notification {
+        max-width: 25%
+    }
+}

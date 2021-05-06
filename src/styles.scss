@@ -1,0 +1,13 @@
+$primary: #1a7bd6;
+$menu-item-active-background-color: $primary;
+
+@import "../node_modules/bulma/bulma.sass";
+
+// https://github.com/jgthms/bulma/issues/1540
+.columns {
+    margin: 0;
+}
+
+.is-clickable {
+    cursor: pointer;
+}

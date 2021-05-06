@@ -1,0 +1,34 @@
+@import "../styles.scss";
+
+.container {
+    height: 100vh;
+}
+
+.company {
+    width: 100%;
+    margin-top: 3em;
+    
+    figure {
+        margin: auto;
+        max-width: 50vw;
+    }
+}
+
+.login {
+    margin-top: 3em;
+    width: 75%;
+}
+
+@media (min-width: $tablet) {
+    .company {
+        margin-top: unset;
+
+        figure {
+            max-width: 30vw;
+        }
+    }
+
+    .login {
+        margin-top: unset;
+    }
+}
