@@ -34,11 +34,13 @@ const Topbar = ({onMenuClicked}) => {
       
       <div className="level-right">
 
-        <div className="level-item">
+        <div className="level-item mr-5">
           <span className="icon">
             <Icon path={mdiAccount}/>
           </span>
-          <span>{username}</span>
+          
+          {/* TODO: remove fake username */}
+          <span className="has-text-weight-bold">{username ? username : 'fake user'}</span>
         </div>
 
         <div className="level-item">
