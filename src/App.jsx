@@ -18,10 +18,6 @@ const App = () => {
 
   const handleToggleBar = () => setShowSideBar(!showSideBar)
   const handleCloseBar  = () => setShowSideBar(false)
-  const handleLogout  = () => {
-    window.location = '/'
-    logout()
-  }
 
   if(!loggedIn) {
     document.body.classList.remove('has-navbar-fixed-top')
