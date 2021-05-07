@@ -37,7 +37,7 @@ const Sidebar = ({onClose}) => {
       <div className="level is-mobile">
         <div className="level-left">
           <div className="level-item">
-            <figure className="image is-128x128">
+            <figure className="image is-96x96">
               <img src={logo}/>
             </figure>
           </div>
