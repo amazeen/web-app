@@ -32,8 +32,8 @@ const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
       <div className="modal-background"></div>
       <div className="modal-card">
         <header className="modal-card-head">
-          <p class="modal-card-title">Update thresholds</p>
-          <button class="delete" onClick={onClose}></button>
+          <p className="modal-card-title">Update thresholds</p>
+          <button className="delete" onClick={onClose}></button>
         </header>
         <section className="modal-card-body">
 
@@ -43,21 +43,21 @@ const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
               <label className="label">Temperature</label>
             </div>
 
-            <div class="field-body">
+            <div className="field-body">
               
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={minTemperature} onChange={(e) => setMinTemperature(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseDown} size={1}/>
                   </span>
                 </div>
               </div>
 
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={maxTemperature} onChange={(e) => setMaxTemperature(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseUp} size={1}/>
                   </span>
                 </div>
@@ -73,21 +73,21 @@ const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
               <label className="label">Capacity</label>
             </div>
 
-            <div class="field-body">
+            <div className="field-body">
               
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={minCapacity} onChange={(e) => setMinCapacity(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseDown} size={1}/>
                   </span>
                 </div>
               </div>
 
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={maxCapacity} onChange={(e) => setMaxCapacity(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseUp} size={1}/>
                   </span>
                 </div>
@@ -103,21 +103,21 @@ const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
               <label className="label">Humidity</label>
             </div>
 
-            <div class="field-body">
+            <div className="field-body">
               
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={minHumidity} onChange={(e) => setMinHumidity(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseDown} size={1}/>
                   </span>
                 </div>
               </div>
 
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={maxHumidity} onChange={(e) => setMaxHumidity(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseUp} size={1}/>
                   </span>
                 </div>
@@ -133,21 +133,21 @@ const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
               <label className="label">Pressure</label>
             </div>
 
-            <div class="field-body">
+            <div className="field-body">
               
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={minPressure} onChange={(e) => setMinPressure(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseDown} size={1}/>
                   </span>
                 </div>
               </div>
 
-              <div class="field">
+              <div className="field">
                 <div className="control has-icons-left">
                   <input className="input" type="number" value={maxPressure} onChange={(e) => setMaxPressure(e.target.value)}/>
-                  <span class="icon is-small is-left">
+                  <span className="icon is-small is-left">
                     <Icon path={mdiArrowCollapseUp} size={1}/>
                   </span>
                 </div>
