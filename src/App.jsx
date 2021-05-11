@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, BrowserRouter, Switch } from 'react-router-dom'
 
 import Sidebar from './components/Sidebar'
 import useAuth from './hooks/useAuth'
 import Login from './pages/Login'
 import SiloDashboard from './pages/SiloDashboard'
-import { logout } from './services/api'
+import { refresh } from './services/api'
 
 import styles from './App.module.scss'
 import Topbar from './components/Topbar'
@@ -18,6 +18,8 @@ const App = () => {
 
   const handleToggleBar = () => setShowSideBar(!showSideBar)
   const handleCloseBar  = () => setShowSideBar(false)
+
+  useEffect(refresh, [])
 
   if(!loggedIn) {
     document.body.classList.remove('has-navbar-fixed-top')
@@ -43,7 +45,7 @@ const App = () => {
           <Route exact path="/">
             <Info>Select a silo</Info>
           </Route>
-          <Route exact path="/silo/:silo">
+          <Route exact path="/area/:area/silo/:silo">
             <SiloDashboard/>
           </Route>
           <Route path="*">

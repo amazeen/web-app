@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { getPressure, getPressureThreshold, realtimeNotifier } from '../services/api'
 import PropTypes from 'prop-types'
 
-const usePressure = (silo) => {
+const usePressure = (area, silo) => {
   const [pressure, setPressure] = useState(0)
 
   useEffect(() => {
     const init = async() => {
-      setPressure(await getPressure(silo)) 
+      setPressure(await getPressure(area, silo)) 
     }
     
     realtimeNotifier.subscribe('pressure', setPressure)
@@ -22,7 +22,8 @@ const usePressure = (silo) => {
 }
 
 usePressure.propTypes = {
-  silo: PropTypes.string
+  silo: PropTypes.string,
+  area: PropTypes.string
 }
 
 

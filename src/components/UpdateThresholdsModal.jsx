@@ -6,7 +6,7 @@ import { updateThresholds } from '../services/api'
 import Icon from '@mdi/react'
 import { mdiArrowCollapseDown, mdiArrowCollapseUp } from '@mdi/js'
 
-const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
+const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
   
   const [maxTemperature, setMaxTemperature] = useState(thresholds.maxTemperature)
   const [minTemperature, setMinTemperature] = useState(thresholds.minTemperature)
@@ -22,8 +22,8 @@ const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
 
   const handleClick = async() => {
     
-    await updateThresholds(silo, {maxPressure, minPressure, maxCapacity, minCapacity, maxHumidity, minHumidity, minTemperature, maxTemperature})
-    
+    await updateThresholds(area, silo, {maxPressure, minPressure, maxCapacity, minCapacity, maxHumidity, minHumidity, minTemperature, maxTemperature})
+
     onClose()
   }
 
@@ -170,12 +170,14 @@ const UpdateThresholdsModal = ({silo, thresholds, onClose}) => {
 
 UpdateThresholdsModal.defaultProps = {
   silo: '',
+  area: '',
   thresholds: {},
   onClose: () => {}
 }
 
 UpdateThresholdsModal.propTypes = {
   silo: PropTypes.string,
+  area: PropTypes.string,
   thresholds: PropTypes.object,
   onClose: PropTypes.func
 }

@@ -55,7 +55,7 @@ const Sidebar = ({onClose}) => {
             <p className="menu-label is-size-6 has-text-weight-bold"> Area {area.id}</p>
             <ul className="menu-list">
               {area.silos.map((silo, idx) => {
-                const link = `/silo/${silo}`
+                const link = `/area/${area.id}/silo/${silo}`
                 return <li key={idx}>
                   <Link className={ location.pathname == link ? 'is-active' : ''} to={link}>Silo {silo}</Link>
                 </li>

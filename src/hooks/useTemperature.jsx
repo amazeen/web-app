@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { getTemperature, getTemperatureThreshold, realtimeNotifier } from '../services/api'
 import PropTypes from 'prop-types'
 
-const useTemperature = (silo) => {
+const useTemperature = (area, silo) => {
   const [temperature, setTemperature] = useState(0)
 
   useEffect(() => {
     const init = async() => {
-      setTemperature(await getTemperature(silo)) 
+      setTemperature(await getTemperature(area, silo)) 
     }
     
     realtimeNotifier.subscribe('temperature', setTemperature)
@@ -22,7 +22,8 @@ const useTemperature = (silo) => {
 }
 
 useTemperature.propTypes = {
-  silo: PropTypes.string
+  silo: PropTypes.string,
+  area: PropTypes.string
 }
 
 export default useTemperature

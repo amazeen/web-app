@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { getCapacity, getCapacityThreshold, realtimeNotifier } from '../services/api'
 import PropTypes from 'prop-types'
 
-const useCapacity = (silo) => {
+const useCapacity = (area, silo) => {
   const [changed, setChanged] = useState({value: 0, active: false})
   const [capacityArray, setCapacityArray] = useState(Array(8).fill(false))
   
@@ -27,7 +27,7 @@ const useCapacity = (silo) => {
   useEffect(() => {
     
     const init = async () => {
-      const capacity = await getCapacity(silo)
+      const capacity = await getCapacity(area, silo)
       const increment = 100 / capacityArray.length
       const idx = Math.ceil(capacity / increment) - 1
       const newArray = capacityArray.map((el, i) => i <= idx ? true : false)
@@ -46,7 +46,8 @@ const useCapacity = (silo) => {
 }
 
 useCapacity.propTypes = {
-  silo: PropTypes.string
+  silo: PropTypes.string,
+  area: PropTypes.string
 }
 
 export default useCapacity

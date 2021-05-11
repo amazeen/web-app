@@ -1,3 +1,5 @@
+//TODO: catch errors
+
 import axios from 'axios'
 import io from 'socket.io-client'
 
@@ -6,7 +8,7 @@ import io from 'socket.io-client'
 
 const dataApi = axios.create({baseURL: process.env.REACT_APP_API_URL + '/data/'})
 const authApi = axios.create({baseURL: process.env.REACT_APP_API_URL + '/auth/'})
-const realTimeApi = io(process.env.REACT_APP_API_URL + '/real-time/', {auth: {token: ''}}, {autoConnect: false})
+// const realTimeApi = io(process.env.REACT_APP_API_URL + '/real-time/', {auth: {token: ''}}, {autoConnect: false})
 
 // Access and refresh token management
 dataApi.interceptors.request.use(
@@ -26,7 +28,7 @@ dataApi.interceptors.response.use(
         .then(() => {
             const token = getAccessToken()
             error.config.headers.Authorization = 'Bearer ' + token
-            realTimeApi.auth.token = token
+            // realTimeApi.auth.token = token
             return dataApi(error.config)
         })
         .catch(err => Promise.reject(err))
@@ -54,7 +56,7 @@ export const authNotifier = {
     notifiers: []
 }
 
-const refresh = async() => {
+export const refresh = async() => {
 
     try{
         const response = await authApi({
@@ -73,16 +75,22 @@ const refresh = async() => {
 
 // Api auth routes
 export const login = async (username, password) => {
+    
+    const response = await authApi.post('/login', {username, password})
 
-    //TODO: remove comments 
-    //const response = await authApi.post('/login', {username, password})
-
-    //setAccessToken(response.data.access_token)
-    //setRefreshToken(response.data.refresh_token)
+    setAccessToken(response.data.access_token)
+    setRefreshToken(response.data.refresh_token)
     authNotifier.notify(true)
 }
 
 export const logout = async() => {
+
+    const response = await authApi({
+        method: 'post',
+        url: '/logout',
+        headers: { Authorization: 'Bearer '+ getRefreshToken() }
+    })
+
     setAccessToken('')
     setRefreshToken('')
     authNotifier.notify(false)
@@ -90,87 +98,83 @@ export const logout = async() => {
 
 export const getAreas = async() => {
 
-    //TODO: remove comments 
-    //const response = await dataApi.post('/')
+    const areas = (await dataApi.get('/')).data.areas
+    const result = Promise.all(areas.map(async (area) => {
+        const response = await dataApi.get('/area/' + area)
+        return response.data
+    }))
 
-    //return response.data.areas
-    return [
-        {
-            id: '2',
-            silos: [
-                '1',
-                '2',
-                '3',
-                '4'
-            ]
-        },
-        {
-            id: '1',
-            silos: [
-                '5',
-                '6',
-                '7',
-                '8'
-            ]
-        }
-        
-    ]
+    return result
 }
 
-export const getHistory = async (silo) => {
-    //TODO
+export const getHistory = async (area, silo) => {
 
-    return [
-        {
-            date: "2011-10-05T00:00:00.000Z",
-            average_temperature: 50,
-            average_humidity: 60,
-            average_pressure: 70
-        },
-        {
-            date: "2011-10-06T00:00:00.000Z",
-            average_temperature: 60,
-            average_humidity: 65,
-            average_pressure: 40
-        }
-    ]
+    const response = await dataApi.get(`/area/${area}/silo/${silo}/history`)
+    return response.data
 }
 
-export const getThresholds = async (silo) => {
+export const getTemperature = async (area, silo) => {
+    const response = await dataApi.get(`/area/${area}/silo/${silo}/parameters`)
+    return response.data.temperature
+}
+
+export const getPressure = async (area, silo) => {
+    const response = await dataApi.get(`/area/${area}/silo/${silo}/parameters`)
+    return response.data.pressure
+}
+
+export const getHumidity = async (area, silo) => {
+    const response = await dataApi.get(`/area/${area}/silo/${silo}/parameters`)
+    return response.data.humidity
+}
+
+export const getCapacity = async (area, silo) => {
+    const response = await dataApi.get(`/area/${area}/silo/${silo}/parameters`)
+    return response.data.capacity
+}
+
+export const getThresholds = async (area, silo) => {
+    
+    const response = await dataApi.get(`/area/${area}/silo/${silo}/thresholds`)
+
     return {
-        minHumidity: 40,
-        maxHumidity: 80,
-        minPressure: 1000,
-        maxPressure: 1100,
-        minCapacity: 0,
-        maxCapacity: 100,
-        minTemperature: 0,
-        maxTemperature: 100
+        minHumidity:    response.data.find(x => x.type == 'humidity').minimum,
+        maxHumidity:    response.data.find(x => x.type == 'humidity').maximum,
+        minPressure:    response.data.find(x => x.type == 'pressure').minimum,
+        maxPressure:    response.data.find(x => x.type == 'pressure').maximum,
+        minCapacity:    response.data.find(x => x.type == 'capacity').minimum,
+        maxCapacity:    response.data.find(x => x.type == 'capacity').maximum,
+        minTemperature: response.data.find(x => x.type == 'temperature').minimum,
+        maxTemperature: response.data.find(x => x.type == 'temperature').maximum
     }
 }
 
-export const getTemperature = async (silo) => {
-    //TODO
-    return (Math.random() * 100) + 1
-}
+export const updateThresholds = async (area, silo, data) => {
+    const apiData = [
+        {
+            type: 'temperature',
+            minimum: data.minTemperature,
+            maximum: data.maxTemperature
+        },
+        {
+            type: 'pressure',
+            minimum: data.minPressure,
+            maximum: data.maxPressure
+        },
+        {
+            type: 'humidity',
+            minimum: data.minHumidity,
+            maximum: data.maxHumidity
+        },
+        {
+            type: 'capacity',
+            minimum: data.minCapacity,
+            maximum: data.maxCapacity
+        }
+    ]
 
-export const getPressure = async (silo) => {
-    //TODO
-    return (Math.random() * 100) + 1000
-}
+    const response = await dataApi.put(`/area/${area}/silo/${silo}/thresholds`, apiData)
 
-export const getHumidity = async (silo) => {
-    //TODO
-    return (Math.random() * 50) + 50
-}
-
-export const getCapacity = async (silo) => {
-    //TODO
-    return Math.random() * 101
-}
-
-export const updateThresholds = async (data) => {
-    //TODO
 }
 
 //Used to update state on realtime api hooks
@@ -194,27 +198,27 @@ export const realtimeNotifier = {
     }
 }
 
-realTimeApi.on('error', (data) => realtimeNotifier.notify('alarm', data))
-realTimeApi.on('connect_error', (data) => realtimeNotifier.notify('alarm', data))
-realTimeApi.on('reconnect_error', (data) => realtimeNotifier.notify('alarm', data))
+// realTimeApi.on('error', (data) => realtimeNotifier.notify('alarm', data))
+// realTimeApi.on('connect_error', (data) => realtimeNotifier.notify('alarm', data))
+// realTimeApi.on('reconnect_error', (data) => realtimeNotifier.notify('alarm', data))
 
-realTimeApi.on('parameter:reading', (data) => realtimeNotifier.notify(data.type, data))
-realTimeApi.on('parameter:treshold-reached', (data) => realtimeNotifier.notify('alarm', data))
+// realTimeApi.on('parameter:reading', (data) => realtimeNotifier.notify(data.type, data))
+// realTimeApi.on('parameter:treshold-reached', (data) => realtimeNotifier.notify('alarm', data))
 
 const checkRealtimeApiConnection = async () => {
-    if(!realTimeApi.connected) await realTimeApi.connect()
+    // if(!realTimeApi.connected) await realTimeApi.connect()
 }
 
 export const receiveSiloEvents = async (id) => {
     await checkRealtimeApiConnection()
 
-    realTimeApi.auth.token = getAccessToken()
-    realTimeApi.emit('silo:join',id)
+    // realTimeApi.auth.token = getAccessToken()
+    // realTimeApi.emit('silo:join',id)
 }
 
 export const stopReceivingSiloEvents = async (id) => {
     await checkRealtimeApiConnection()
 
-    realTimeApi.emit('silo:leave',id)
+    // realTimeApi.emit('silo:leave',id)
 }
 

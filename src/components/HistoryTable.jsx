@@ -3,13 +3,13 @@ import { getHistory } from '../services/api'
 
 import PropTypes from 'prop-types'
 
-const HistoryTable = ({silo}) => {
+const HistoryTable = ({area, silo}) => {
   
   const [history, setHistory] = useState([])
 
   useEffect(() => {
     const init = async() => {
-      setHistory(await getHistory(silo))
+      setHistory(await getHistory(area, silo))
     }
 
     init()
@@ -29,10 +29,10 @@ const HistoryTable = ({silo}) => {
         <tbody>
           {history.map((row, idx) => 
             <tr key={idx}>
-              <td>{row.date}</td>
-              <td>{row.average_temperature}</td>
-              <td>{row.average_pressure}</td>
-              <td>{row.average_humidity}</td>
+              <td>{row.time}</td>
+              <td>{row.temperature}</td>
+              <td>{row.pressure}</td>
+              <td>{row.humidity}</td>
             </tr>
           )}
         </tbody>
@@ -43,10 +43,12 @@ const HistoryTable = ({silo}) => {
 
 HistoryTable.defaultProps = {
   silo: '',
+  area: '',
 }
 
 HistoryTable.propTypes = {
   silo: PropTypes.string,
+  area: PropTypes.string,
 }
 
 
