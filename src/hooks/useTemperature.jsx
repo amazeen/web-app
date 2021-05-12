@@ -7,7 +7,12 @@ const useTemperature = (area, silo) => {
 
   useEffect(() => {
     const init = async() => {
-      setTemperature(await getTemperature(area, silo)) 
+      try{
+        setTemperature(await getTemperature(area, silo)) 
+      }
+      catch(err) {
+        console.log('Error retrieving temperature: ' + err)
+      }
     }
     
     realtimeNotifier.subscribe('temperature', setTemperature)

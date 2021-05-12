@@ -27,7 +27,14 @@ const useCapacity = (area, silo) => {
   useEffect(() => {
     
     const init = async () => {
-      const capacity = await getCapacity(area, silo)
+      let capacity = 0
+      try {
+        capacity = await getCapacity(area, silo)
+      }
+      catch(err){
+        console.log('Error retrieving capacity: '+ err)
+      }
+
       const increment = 100 / capacityArray.length
       const idx = Math.ceil(capacity / increment) - 1
       const newArray = capacityArray.map((el, i) => i <= idx ? true : false)

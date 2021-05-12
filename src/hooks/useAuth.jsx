@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { authNotifier, getAccessToken } from '../services/api'
+import { authNotifier, getAccessToken, refresh } from '../services/api'
 
 const useAuth = () => {
     const [loggedIn, setLoggedIn] = useState(authNotifier.value)
@@ -18,6 +18,8 @@ const useAuth = () => {
 
     useEffect(() => {
       authNotifier.subscribe(setLoggedIn)
+
+      refresh()
 
       return () => {
         authNotifier.unsubscribe(setLoggedIn)

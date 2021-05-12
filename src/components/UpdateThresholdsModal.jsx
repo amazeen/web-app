@@ -22,7 +22,12 @@ const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
 
   const handleClick = async() => {
     
-    await updateThresholds(area, silo, {maxPressure, minPressure, maxCapacity, minCapacity, maxHumidity, minHumidity, minTemperature, maxTemperature})
+    try{
+      await updateThresholds(area, silo, {maxPressure, minPressure, maxCapacity, minCapacity, maxHumidity, minHumidity, minTemperature, maxTemperature})
+    }
+    catch(err) {
+      console.log('Error updating thresholds: ' + err)
+    }
 
     onClose()
   }

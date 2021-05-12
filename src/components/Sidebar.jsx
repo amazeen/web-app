@@ -16,14 +16,20 @@ const Sidebar = ({onClose}) => {
   const location = useLocation()
   const [areas, setAreas] = useState([]) 
 
-  useEffect(() => {
-    const init = async () => {
+  const getAreasSafe = async () => {
+
+    try{
       const data = await getAreas()
       data.sort((a, b) => a.id - b.id)
       setAreas(data)
     }
-    
-    init()
+    catch(err){
+      console.log('Error retrieving areas: ' + err)
+    }
+  }
+
+  useEffect(() => {
+    getAreasSafe()
   },[])
 
   //TODO: More Colors

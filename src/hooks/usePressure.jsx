@@ -7,7 +7,12 @@ const usePressure = (area, silo) => {
 
   useEffect(() => {
     const init = async() => {
-      setPressure(await getPressure(area, silo)) 
+      try{
+        setPressure(await getPressure(area, silo)) 
+      }
+      catch(err) {
+        console.log('Error retrieving pressure: ' + err)
+      }
     }
     
     realtimeNotifier.subscribe('pressure', setPressure)

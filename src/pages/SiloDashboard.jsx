@@ -34,18 +34,23 @@ const SiloDashboard = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [notificationVisible, setNotificationVisible] = useState(false)
 
+  const getThresholdsSafe = async() => {
+    try{
+      setThresholds(await getThresholds(area, silo))
+    }
+    catch(err) {
+      console.log('Error retrieving tresholds: ' + err)
+    }
+  }
+
   useEffect(() => {
     setNotificationVisible(true)
   },[alarm])
 
   useEffect(() => {
-    
-    const init = async() => {
-      setThresholds(await getThresholds(area, silo))
-    }
 
     receiveSiloEvents(silo)
-    init()
+    getThresholdsSafe()
 
     return () => {
       stopReceivingSiloEvents(silo)
@@ -55,7 +60,7 @@ const SiloDashboard = () => {
   const handleShowModal  = () => setModalVisible(true)
   const handleCloseModal = async () => {
     setModalVisible(false)
-    setThresholds(await getThresholds(area, silo))
+    getThresholdsSafe()
   }
   
   const handleCloseNotification = () => setNotificationVisible(false)
@@ -102,11 +107,7 @@ const SiloDashboard = () => {
       <h2 className="subtitle is-4">History</h2>
       <HistoryTable silo={silo} area={area} />
 
-
       {notificationVisible && alarm && <Notification className="is-danger is-light" onClose={handleCloseNotification}>{alarm}</Notification>}
-
-      {/* TODO: remove */}
-      <Notification className="is-danger is-light">TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION TEST ALARM NOTIFICATION</Notification>
 
       </div>
     {modalVisible && <UpdateThresholdsModal silo={silo} area={area} thresholds={thresholds} onClose={handleCloseModal}/>}

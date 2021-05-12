@@ -7,7 +7,12 @@ const useHumidity = (area, silo) => {
 
   useEffect(() => {
     const init = async() => {
-      setHumidity(await getHumidity(area, silo)) 
+      try{
+        setHumidity(await getHumidity(area, silo)) 
+      }
+      catch(err) {
+        console.log('Error retrieving humidity: ' + err)
+      }
     }
     
     realtimeNotifier.subscribe('humidity', setHumidity)

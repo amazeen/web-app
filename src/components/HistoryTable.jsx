@@ -7,12 +7,18 @@ const HistoryTable = ({area, silo}) => {
   
   const [history, setHistory] = useState([])
 
-  useEffect(() => {
-    const init = async() => {
+  const getHistorySafe = async() => {
+      
+    try{
       setHistory(await getHistory(area, silo))
     }
+    catch(err) {
+      console.log('Error retrieving history: ' + err)
+    }
+  }
 
-    init()
+  useEffect(() => {
+    getHistorySafe()
   }, [silo])
 
   return(
