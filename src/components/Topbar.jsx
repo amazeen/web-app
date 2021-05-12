@@ -39,8 +39,7 @@ const Topbar = ({onMenuClicked}) => {
             <Icon path={mdiAccount}/>
           </span>
           
-          {/* TODO: remove fake username */}
-          <span className="has-text-weight-bold">{username ? username : 'fake user'}</span>
+          <span className="has-text-weight-bold">{username}</span>
         </div>
 
         <div className="level-item">
