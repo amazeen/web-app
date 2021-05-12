@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { realtimeNotifier } from '../services/api'
 import PropTypes from 'prop-types'
 
+//TODO: refactor
+
 const useAlarm = (silo) => {
   const [alarm, setAlarm] = useState('')
 

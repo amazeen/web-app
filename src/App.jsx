@@ -19,8 +19,6 @@ const App = () => {
   const handleToggleBar = () => setShowSideBar(!showSideBar)
   const handleCloseBar  = () => setShowSideBar(false)
 
-  useEffect(refresh, [])
-
   if(!loggedIn) {
     document.body.classList.remove('has-navbar-fixed-top')
     return <Login />

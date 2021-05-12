@@ -25,10 +25,10 @@ const Login = () => {
     }
   }
 
+  const handleClose = async() => setError('')
   
   return (
     <div className={`level ${styles.container}`}>
-
 
         <div className="level-item has-text-centered mt-5-mobile">
           <div className={styles.company}>
@@ -38,8 +38,6 @@ const Login = () => {
             <span className="is-size-2 has-text-weight-bold">Sioux Silos</span>
           </div>
         </div>
-
-
 
         <div className="level-item has-text-centered">
 
@@ -67,7 +65,7 @@ const Login = () => {
 
       </div>
       
-      {error && <Notification className="is-danger is-light">{error}</Notification>}
+      {error && <Notification className="is-danger is-light" onClose={handleClose}>{error}</Notification>}
     </div>
   )
 }

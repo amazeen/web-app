@@ -8,7 +8,8 @@ import io from 'socket.io-client'
 
 const dataApi = axios.create({baseURL: process.env.REACT_APP_API_URL + '/data/'})
 const authApi = axios.create({baseURL: process.env.REACT_APP_API_URL + '/auth/'})
-// const realTimeApi = io(process.env.REACT_APP_API_URL + '/real-time/', {auth: {token: ''}}, {autoConnect: false})
+
+const realTimeApi = io(process.env.REACT_APP_API_URL + '/realtime/', {auth: {token: ''}, autoConnect: false, reconnection: false})
 
 // Access and refresh token management
 dataApi.interceptors.request.use(
@@ -21,17 +22,19 @@ dataApi.interceptors.request.use(
 
 dataApi.interceptors.response.use(
     response => response,
-    error => {
+    async (error) => {
         if(error.response.status != 401) return Promise.reject(error)
 
-        return refresh()
-        .then(() => {
+        try{
+            await refresh()
             const token = getAccessToken()
             error.config.headers.Authorization = 'Bearer ' + token
-            // realTimeApi.auth.token = token
+
             return dataApi(error.config)
-        })
-        .catch(err => Promise.reject(err))
+        }
+        catch(err) {
+            return Promise.reject(error)
+        }
     }
 )
 
@@ -58,7 +61,10 @@ export const authNotifier = {
 
 export const refresh = async() => {
 
+    
     try{
+        if(getRefreshToken() == '') throw 'Refresh token missing'
+        
         const response = await authApi({
             method: 'post',
             url: '/refresh',
@@ -66,10 +72,15 @@ export const refresh = async() => {
         })
 
         setAccessToken(response.data.access_token)
+
+        realTimeApi.auth.token = getAccessToken()
+        if(!realTimeApi.connected) realTimeApi.connect()
+
         authNotifier.notify(true)
     }
     catch(err) {
         logout()
+        throw 'Refresh token expired'
     }
 }
 
@@ -80,20 +91,32 @@ export const login = async (username, password) => {
 
     setAccessToken(response.data.access_token)
     setRefreshToken(response.data.refresh_token)
+
+    realTimeApi.auth.token = getAccessToken()
+    realTimeApi.connect()
+
     authNotifier.notify(true)
 }
 
 export const logout = async() => {
 
-    const response = await authApi({
-        method: 'post',
-        url: '/logout',
-        headers: { Authorization: 'Bearer '+ getRefreshToken() }
-    })
-
     setAccessToken('')
     setRefreshToken('')
+
+    realTimeApi.auth.token = ''
+    realTimeApi.disconnect()
+
     authNotifier.notify(false)
+
+    try {
+        
+        const response = await authApi({
+            method: 'post',
+            url: '/logout',
+            headers: { Authorization: 'Bearer '+ getRefreshToken() }
+        })
+    }
+    catch(err) {}
 }
 
 export const getAreas = async() => {
@@ -180,8 +203,14 @@ export const updateThresholds = async (area, silo, data) => {
 //Used to update state on realtime api hooks
 export const realtimeNotifier = {
     notify: function (message, data) { 
-        if(message === 'capacity') this.topics[message].forEach(fun => fun({value: data.value, active: data.active}))
-        else this.topics[message].forEach(fun => fun(data.value))
+        try{
+            if(message === 'capacity') this.topics[message].forEach(fun => fun({value: data.value, active: data.active}))
+            else this.topics[message].forEach(fun => fun(data.value))
+        }
+        catch(err) {
+            //Unknown message type
+        }
+        
     },
     subscribe: function (message, fun) {
         this.topics[message].push(fun)
@@ -198,27 +227,27 @@ export const realtimeNotifier = {
     }
 }
 
-// realTimeApi.on('error', (data) => realtimeNotifier.notify('alarm', data))
-// realTimeApi.on('connect_error', (data) => realtimeNotifier.notify('alarm', data))
-// realTimeApi.on('reconnect_error', (data) => realtimeNotifier.notify('alarm', data))
+realTimeApi.on('error', (data) => realtimeNotifier.notify('alarm', data))
+realTimeApi.on('connect_error', (data) => realtimeNotifier.notify('alarm', data))
+realTimeApi.on('reconnect_error', (data) => realtimeNotifier.notify('alarm', data))
 
-// realTimeApi.on('parameter:reading', (data) => realtimeNotifier.notify(data.type, data))
-// realTimeApi.on('parameter:treshold-reached', (data) => realtimeNotifier.notify('alarm', data))
+realTimeApi.on('parameter:reading', (data) => realtimeNotifier.notify(data.type, data))
+realTimeApi.on('parameter:threshold-reached', (data) => realtimeNotifier.notify('alarm', data))
 
 const checkRealtimeApiConnection = async () => {
-    // if(!realTimeApi.connected) await realTimeApi.connect()
+    if(!realTimeApi.connected) await realTimeApi.connect()
 }
 
 export const receiveSiloEvents = async (id) => {
     await checkRealtimeApiConnection()
 
-    // realTimeApi.auth.token = getAccessToken()
-    // realTimeApi.emit('silo:join',id)
+    realTimeApi.auth.token = getAccessToken()
+    realTimeApi.emit('silo:join',id)
 }
 
 export const stopReceivingSiloEvents = async (id) => {
     await checkRealtimeApiConnection()
 
-    // realTimeApi.emit('silo:leave',id)
+    realTimeApi.emit('silo:leave',id)
 }
 
