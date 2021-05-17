@@ -5,7 +5,6 @@ import Sidebar from './components/Sidebar'
 import useAuth from './hooks/useAuth'
 import Login from './pages/Login'
 import SiloDashboard from './pages/SiloDashboard'
-import { refresh } from './services/api'
 
 import styles from './App.module.scss'
 import Topbar from './components/Topbar'

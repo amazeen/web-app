@@ -104,8 +104,11 @@ export const logout = async() => {
     setAccessToken('')
     setRefreshToken('')
 
-    realTimeApi.auth.token = ''
-    realTimeApi.disconnect()
+    try{
+        realTimeApi.auth.token = ''
+        realTimeApi.disconnect()
+    }
+    catch(err) {}
 
     authNotifier.notify(false)
 

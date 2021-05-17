@@ -19,7 +19,10 @@ const useAuth = () => {
     useEffect(() => {
       authNotifier.subscribe(setLoggedIn)
 
-      refresh()
+      try{
+        refresh()
+      }
+      catch(err) {}
 
       return () => {
         authNotifier.unsubscribe(setLoggedIn)
