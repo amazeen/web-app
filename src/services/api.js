@@ -68,7 +68,8 @@ export const refresh = async() => {
         const response = await authApi({
             method: 'post',
             url: '/refresh',
-            headers: { Authorization: 'Bearer '+ getRefreshToken() }
+            headers: { Authorization: 'Bearer '+ getRefreshToken() },
+            data: {}
         })
 
         setAccessToken(response.data.access_token)
@@ -113,7 +114,8 @@ export const logout = async() => {
         const response = await authApi({
             method: 'post',
             url: '/logout',
-            headers: { Authorization: 'Bearer '+ getRefreshToken() }
+            headers: { Authorization: 'Bearer '+ getRefreshToken() },
+            data: {}
         })
     }
     catch(err) {}
