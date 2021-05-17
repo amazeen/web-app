@@ -1,2 +1,2 @@
-release: npm ci && npm build
-web: npm run serve
+release: npm ci && npm build && npm install -g serve
+web: serve -s build -l $PORT
