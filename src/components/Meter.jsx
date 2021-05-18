@@ -33,7 +33,8 @@ Meter.defaultProps = {
   displayValue: true,
   displayUnit: null,
   low: 0,
-  high: 1
+  high: 1,
+  value: 0
 }
 
 Meter.propTypes = {
