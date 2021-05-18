@@ -6,10 +6,15 @@ import io from 'socket.io-client'
 // this headers bypasses localtunnel's reminder page
 //if(process.env.LOCALTUNNEL_WORKAROUND) axios.defaults.headers.common['Bypass-Tunnel-Reminder'] = '*'
 
+const getPathname = (url) => {
+    alert(new URL(url).pathname)
+    return new URL(url).pathname
+}
+
 const dataApi = axios.create({baseURL: process.env.REACT_APP_API_URL + '/data/'})
 const authApi = axios.create({baseURL: process.env.REACT_APP_API_URL + '/auth/'})
 
-const realTimeApi = io(process.env.REACT_APP_API_URL + '/realtime/', {auth: {token: ''}, autoConnect: false, reconnection: false})
+const realTimeApi = io(new URL(process.env.REACT_APP_API_URL).origin, {path: new URL(process.env.REACT_APP_API_URL).pathname + '/realtime/socket.io', autoConnect: false, reconnection: false})
 
 // Access and refresh token management
 dataApi.interceptors.request.use(
@@ -74,7 +79,7 @@ export const refresh = async() => {
 
         setAccessToken(response.data.access_token)
 
-        realTimeApi.auth.token = getAccessToken()
+        //realTimeApi.extraHeaders.Authorization = 'Bearer '+ getAccessToken()
         if(!realTimeApi.connected) realTimeApi.connect()
 
         authNotifier.notify(true)
@@ -93,7 +98,7 @@ export const login = async (username, password) => {
     setAccessToken(response.data.access_token)
     setRefreshToken(response.data.refresh_token)
 
-    realTimeApi.auth.token = getAccessToken()
+    //realTimeApi.extraHeaders.Authorization = 'Bearer '+ getAccessToken()
     realTimeApi.connect()
 
     authNotifier.notify(true)
@@ -105,7 +110,7 @@ export const logout = async() => {
     setRefreshToken('')
 
     try{
-        realTimeApi.auth.token = ''
+        //realTimeApi.extraHeaders.Authorization = ''
         realTimeApi.disconnect()
     }
     catch(err) {}
@@ -246,7 +251,7 @@ const checkRealtimeApiConnection = async () => {
 export const receiveSiloEvents = async (id) => {
     await checkRealtimeApiConnection()
 
-    realTimeApi.auth.token = getAccessToken()
+    //realTimeApi.extraHeaders.Authorization = 'Bearer '+ getAccessToken()
     realTimeApi.emit('silo:join',id)
 }
 
