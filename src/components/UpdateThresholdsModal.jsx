@@ -42,6 +42,19 @@ const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
         </header>
         <section className="modal-card-body">
 
+          <div className="is-hidden-mobile card-header columns">
+            <div className="column">
+              <div className="subtitle is-4">Fields</div>
+            </div>
+            <div className="column">
+              <div className="subtitle is-4">Minimum</div>
+            </div>
+            <div className="column">
+              <div className="subtitle is-4">Maximum</div>
+            </div>
+          </div>
+
+          <div className="card-content">
           <div className="field is-horizontal is-mobile">
 
             <div className="field-label is-normal">
@@ -162,6 +175,7 @@ const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
 
           </div>
 
+          </div>
         </section>
 
         <section className="modal-card-foot">

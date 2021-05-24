@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { realtimeNotifier } from '../services/api'
 import PropTypes from 'prop-types'
 
 //TODO: refactor
 
 const useAlarm = (silo) => {
-  const [alarm, setAlarm] = useState('')
+  const [alarm, setAlarm] = useState({value: '', type: ''})
+
+  const msg = useMemo(() => {
+    if(alarm.type) return 'Threshold Reached: '+ alarm.type + ' ' + alarm.value
+    else return alarm.value
+  }, [alarm])
 
   useEffect(() => { 
     realtimeNotifier.subscribe('alarm', setAlarm)
@@ -15,7 +20,7 @@ const useAlarm = (silo) => {
     }
   }, [silo])
 
-  return alarm
+  return msg
 }
 
 useAlarm.propTypes = {
