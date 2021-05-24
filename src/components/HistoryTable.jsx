@@ -35,10 +35,10 @@ const HistoryTable = ({area, silo}) => {
         <tbody>
           {history.map((row, idx) => 
             <tr key={idx}>
-              <td>{row.time}</td>
-              <td>{row.temperature}</td>
-              <td>{row.pressure}</td>
-              <td>{row.humidity}</td>
+              <td>{new Date(row.time).toLocaleString('it-IT', {format: 'UTC'})}</td>
+              <td>{row.temperature.toFixed(2)}</td>
+              <td>{row.pressure.toFixed(2)}</td>
+              <td>{row.humidity.toFixed(2)}</td>
             </tr>
           )}
         </tbody>
