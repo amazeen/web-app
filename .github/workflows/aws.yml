@@ -28,7 +28,7 @@ jobs:
         run: |
           CI=false # Sets CI to false to avoid treating warnings as errors
           REACT_APP_API_URL=${{ secrets.API_URL }}
-          run: npm run build 
+          npm run build 
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
