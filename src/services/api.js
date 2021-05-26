@@ -215,6 +215,7 @@ export const realtimeNotifier = {
     notify: function (message, data) { 
         try{
             if(message === 'capacity') this.topics[message].forEach(fun => fun({value: data.value, active: data.active}))
+            if(message === 'alarm') this.topics[message].forEach(fun => fun({value: data.value, type: data.type}))
             else this.topics[message].forEach(fun => fun(data.value))
         }
         catch(err) {
@@ -237,9 +238,9 @@ export const realtimeNotifier = {
     }
 }
 
-realTimeApi.on('error', (data) => realtimeNotifier.notify('alarm', data))
-realTimeApi.on('connect_error', (data) => realtimeNotifier.notify('alarm', data))
-realTimeApi.on('reconnect_error', (data) => realtimeNotifier.notify('alarm', data))
+realTimeApi.on('error', (data) => realtimeNotifier.notify('alarm', {value: data}))
+realTimeApi.on('connect_error', (data) => realtimeNotifier.notify('alarm', {value: data}))
+realTimeApi.on('reconnect_error', (data) => realtimeNotifier.notify('alarm', {value: data}))
 
 realTimeApi.on('parameter:reading', (data) => realtimeNotifier.notify(data.type, data))
 realTimeApi.on('parameter:threshold-reached', (data) => realtimeNotifier.notify('alarm', data))
