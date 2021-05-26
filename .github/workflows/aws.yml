@@ -27,7 +27,7 @@ jobs:
       - name: Build production bundle
         run: |
           CI=false # Sets CI to false to avoid treating warnings as errors
-          REACT_APP_API_URL=${{ secrets.API_URL }}
+          echo REACT_APP_API_URL=${{ secrets.API_URL }} > .env
           npm run build 
 
       - name: Configure AWS credentials
