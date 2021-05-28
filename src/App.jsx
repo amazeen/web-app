@@ -12,7 +12,7 @@ import Info from './pages/Info'
 
 const App = () => {
 
-  const [loggedIn, username] = useAuth()
+  const {loggedIn} = useAuth()
   const [showSideBar, setShowSideBar]  = useState(true)  
 
   const handleToggleBar = () => setShowSideBar(!showSideBar)

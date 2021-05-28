@@ -43,10 +43,33 @@ dataApi.interceptors.response.use(
     }
 )
 
-export const getAccessToken  = () => localStorage.getItem('access_token')
+const getAccessToken  = () => localStorage.getItem('access_token')
 const getRefreshToken = () => localStorage.getItem('refresh_token')
 const setAccessToken  = (token) => localStorage.setItem('access_token',  token)
 const setRefreshToken = (token) => localStorage.setItem('refresh_token', token)
+
+const getJWTData = () => {
+    try{
+        const data = getAccessToken().split('.')[1]
+        const decoded = JSON.parse(atob(data))
+        return decoded
+    }
+    catch(err) {
+        return {}
+    }
+}
+
+export const getUsername = () => {
+    return getJWTData()?.username ?? ''
+}
+
+export const userCanUpdate = () => {
+    return getJWTData()?.permissions?.includes('update') ?? false
+}
+
+export const userCanRead = () => {
+    return getJWTData()?.permissions?.includes('create') ?? false
+}
 
 // Used to update state on useAuth hook
 export const authNotifier = {

@@ -16,8 +16,10 @@ const Sidebar = ({onClose}) => {
   const location = useLocation()
   const [areas, setAreas] = useState([]) 
 
-  const getAreasSafe = async () => {
+  const [loading, setLoading] = useState(false)
 
+  const getAreasSafe = async () => {
+    setLoading(true)
     try{
       const data = await getAreas()
       data.sort((a, b) => a.id - b.id)
@@ -26,6 +28,7 @@ const Sidebar = ({onClose}) => {
     catch(err){
       console.log('Error retrieving areas: ' + err)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -55,7 +58,7 @@ const Sidebar = ({onClose}) => {
       </div>
 
       <div className="menu">
-
+        {loading && <div className="subtitle is-5">Loading...</div>}
         {areas.map((area, idx) => 
           <React.Fragment key={idx}>
             <p className="menu-label is-size-6 has-text-weight-bold"> Area {area.id}</p>

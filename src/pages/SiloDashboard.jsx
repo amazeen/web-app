@@ -10,6 +10,7 @@ import Notification from '../components/Notification'
 import UpdateThresholdsModal from '../components/UpdateThresholdsModal'
 
 import useAlarm from '../hooks/useAlarm'
+import useAuth from '../hooks/useAuth'
 import useCapacity from '../hooks/useCapacity'
 import useHumidity from '../hooks/useHumidity'
 import usePressure from '../hooks/usePressure'
@@ -20,6 +21,7 @@ import { getThresholds, receiveSiloEvents, stopReceivingSiloEvents } from '../se
 const SiloDashboard = () => {
 
   const {silo, area} = useParams()
+  const {canRead, canUpdate} = useAuth()
 
   const temperature = useTemperature(area, silo)
   const humidity    = useHumidity(area, silo)
@@ -45,6 +47,7 @@ const SiloDashboard = () => {
 
   useEffect(() => {
     setNotificationVisible(true)
+    setTimeout(() => setNotificationVisible(false), 3000)
   },[alarm])
 
   useEffect(() => {
@@ -77,7 +80,7 @@ const SiloDashboard = () => {
         </div>
         <div className="level-right">
           <div className="level-item">
-            <button className="button" onClick={handleShowModal}>
+            <button className="button" onClick={handleShowModal} disabled={!canUpdate}>
               <span className="icon">
                 <Icon path={mdiCog}/>
               </span>
@@ -86,6 +89,8 @@ const SiloDashboard = () => {
         </div>
       </div>
 
+    {canRead && 
+      <>
       <div className="columns">
         <div className="column">
           <Meter name="Temperature" value={temperature} high={thresholds.maxTemperature} low={thresholds.minTemperature} displayUnit="°C"/>
@@ -108,8 +113,9 @@ const SiloDashboard = () => {
       <HistoryTable silo={silo} area={area} />
 
       {notificationVisible && alarm && <Notification className="is-danger is-light" onClose={handleCloseNotification}>{alarm}</Notification>}
-
-      </div>
+      </>
+    }
+    </div>
     {modalVisible && <UpdateThresholdsModal silo={silo} area={area} thresholds={thresholds} onClose={handleCloseModal}/>}
     </>
     
