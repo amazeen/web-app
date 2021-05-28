@@ -68,7 +68,7 @@ export const userCanUpdate = () => {
 }
 
 export const userCanRead = () => {
-    return getJWTData()?.permissions?.includes('create') ?? false
+    return getJWTData()?.permissions?.includes('read') ?? false
 }
 
 // Used to update state on useAuth hook
