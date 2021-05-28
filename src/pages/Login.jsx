@@ -14,15 +14,19 @@ const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleClick = async() => {
+    setLoading(true)
     try{
       await login(username,password)
     }
     catch(err) {
+      setLoading(false)
       setError(String(err))
       setTimeout(() => setError(''),3000)
     }
+    setLoading(false)
   }
 
   const handleClose = async() => setError('')
@@ -58,7 +62,7 @@ const Login = () => {
             </div>
 
             <div className="has-text-centered">
-              <button className="control button is-primary" onClick={handleClick}>Login</button>
+              <button className={`control button is-primary ${loading && 'is-loading'}`} onClick={handleClick} disabled={loading}>Login</button>
             </div>
 
           </div>

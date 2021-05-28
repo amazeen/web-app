@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { updateThresholds } from '../services/api'
 
@@ -20,15 +20,18 @@ const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
   const [maxPressure, setMaxPressure] = useState(thresholds.maxPressure)
   const [minPressure, setMinPressure] = useState(thresholds.minPressure)
 
+  const [loading, setLoading] = useState(false)
+
   const handleClick = async() => {
-    
+    setLoading(true)
     try{
+      
       await updateThresholds(area, silo, {maxPressure, minPressure, maxCapacity, minCapacity, maxHumidity, minHumidity, minTemperature, maxTemperature})
     }
     catch(err) {
       console.log('Error updating thresholds: ' + err)
     }
-
+    setLoading(false)
     onClose()
   }
 
@@ -42,7 +45,8 @@ const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
         </header>
         <section className="modal-card-body">
 
-          <div className="is-hidden-mobile card-header columns">
+          <div className="card-content">
+          <div className="is-hidden-mobile columns">
             <div className="column">
               <div className="subtitle is-4">Fields</div>
             </div>
@@ -54,7 +58,6 @@ const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
             </div>
           </div>
 
-          <div className="card-content">
           <div className="field is-horizontal is-mobile">
 
             <div className="field-label is-normal">
@@ -179,7 +182,7 @@ const UpdateThresholdsModal = ({area, silo, thresholds, onClose}) => {
         </section>
 
         <section className="modal-card-foot">
-          <button className="button is-primary" onClick={handleClick}>Update</button>
+          <button className={`button is-primary ${loading && 'is-loading'}`} onClick={handleClick} disabled={loading}>Update</button>
           <button className="button" onClick={onClose}>Cancel</button>
         </section>
       </div>
