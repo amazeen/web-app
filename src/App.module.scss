@@ -18,6 +18,8 @@
 @media (min-width: $tablet) {
     .sidebar {
         width: 35%;
+        border-right: 2px solid $primary;
+        box-shadow: 0.5em 0 1em -0.125em $grey-light;
     }
 
     .pad {
