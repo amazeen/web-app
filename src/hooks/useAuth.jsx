@@ -1,20 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { authNotifier, getAccessToken, refresh } from '../services/api'
+import { authNotifier, getUsername, refresh, userCanRead, userCanUpdate } from '../services/api'
 
 const useAuth = () => {
     const [loggedIn, setLoggedIn] = useState(authNotifier.value)
     
-    const username = useMemo(() => {
-      try{
-        const data = getAccessToken().split('.')[1]
-        const decoded = JSON.parse(atob(data))
-        return decoded.username ?? ''
-      }
-      catch(err) {
-        return ''
-      }
-
-    },[loggedIn])
+    const username = useMemo(getUsername, [loggedIn])
+    const canRead = useMemo(userCanRead, [loggedIn])
+    const canUpdate = useMemo(userCanUpdate, [loggedIn])
 
     useEffect(() => {
       authNotifier.subscribe(setLoggedIn)
@@ -29,9 +21,7 @@ const useAuth = () => {
       }
     },[])
 
-
-
-    return [loggedIn, username]
+    return {loggedIn, username, canRead, canUpdate}
 }
 
 export default useAuth

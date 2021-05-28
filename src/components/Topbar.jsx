@@ -10,7 +10,7 @@ import { mdiMenu, mdiAccount } from '@mdi/js'
 
 const Topbar = ({onMenuClicked}) => {
 
-  const [loggedIn, username] = useAuth()
+  const {username} = useAuth()
 
   const history = useHistory()
 
